@@ -1,0 +1,138 @@
+# MOCK HACKATHON
+
+
+'''
+Steve is a foodie and he wants to start a new restaurant in Coimbatore.
+Consultant has mapped Saibaba colony into 20 neighborhoods and also
+suggested location for first Restaurant / cloud kitchen. Steve wants to start from
+the restaurant and cover all neighborhoods and return to the restaurant using the
+shortest possible path avoiding already visited neighborhoods. So we want to write
+a program that can recommend the path Steve needs to traverse to generate
+outfile
+'''
+
+
+# Find the Algorithm to find the shortest path to cover all the nodes
+
+# Find the efficient way to convert input data from json to python object
+
+# Apply the algorithm to find the shortest path 
+
+# Evaluate with the output file
+
+# Find the time complexity of the algorithm
+
+
+
+# Importing the required libraries
+import json
+
+
+# Reading the input file | Path = Y:/Student Handout/Input data/level0.json
+with open('Y:/Student Handout/Input data/level0.json') as f:
+    raw_data = json.load(f)
+    keys = raw_data.keys()
+    
+print(keys)
+
+n_neigh = raw_data['n_neighbourhoods']
+neighbourhoods = raw_data['neighbourhoods']
+n_restaurants = raw_data['n_restaurants']
+restaurants = raw_data['restaurants']
+rest_to_neigh_distance = raw_data['restaurants']['r0']['neighbourhood_distance']
+
+'''
+print("-------------------------------------- RAW DATA --------------------------------------") 
+for key in keys:
+    print(raw_data[key])
+    print("--------------------------------------")
+print('----------------------------------- END OF RAW DATA ------------------------------------')
+'''
+
+neighbourhoods_distances = []
+order_quantities = []
+
+
+for n in neighbourhoods:
+    order_quantities.append(neighbourhoods[n]['order_quantity'])
+    neighbourhoods_distances.append(neighbourhoods[n]['distances'])
+
+print(neighbourhoods_distances)
+
+
+
+# Calculating the total distance between the restaurants and the neighbourhoods
+v_path = []
+
+
+
+
+
+
+# MOCK HACKATHON
+
+import json
+import networkx as nx
+from itertools import permutations
+
+# Reading the input file | Path = Y:/Student Handout/Input data/level0.json
+with open('Y:/Student Handout/Input data/level0.json') as f:
+    raw_data = json.load(f)
+    neighbourhoods = raw_data['neighbourhoods']
+
+# Create a graph
+G = nx.Graph()
+
+# Add nodes to the graph
+for n in neighbourhoods:
+    G.add_node(n)
+
+# Add edges to the graph
+for n1 in neighbourhoods:
+    for n2 in neighbourhoods:
+        if n1 != n2:
+            distance = neighbourhoods[n1]['distances'][n2]
+            G.add_edge(n1, n2, weight=distance)
+
+# Find the shortest path that covers all nodes
+shortest_path = None
+shortest_distance = float('inf')
+
+for perm in permutations(neighbourhoods.keys()):
+    distance = sum(G[perm[i]][perm[i+1]]['weight'] for i in range(len(perm)-1))
+    if distance < shortest_distance:
+        shortest_distance = distance
+        shortest_path = perm
+
+print("Shortest Path:", shortest_path)
+print("Shortest Distance:", shortest_distance)
+
+
+
+
+'''now enough knowledge, just follow my instructios and try to implement the solution. the input will be 2d matrix where it will the cost for 
+    all the nodes. you have to find the shortest path to cover all the nodes and return to the starting node. To do so, try using dijkstra's algorithm but do these modificaton in the implementation.
+    first make all the self node distances to infinity. Then apply the dijkstra algorithm for the whole matrix and find the shortest path from the starting point
+    to the all the nodes and take the minimum of all the paths. Then remove the visited node value form the matrix and again apply the dijkstra algorithm and find the shortest path 
+    from that node all the availabe nodes and again take the minimum path from all the paths and add it to the previous minimum path. Do this until all the nodes are visited.
+    At the end you will have the shortest path to cover all the nodes and return to the starting node.
+'''
+
+
+--------------------------------------------------------------
+def tsp_dijkstra(neighbourhoods):
+    # Assuming neighborhoods is a dictionary with distances
+    graph = {node: {neighbor: distance for neighbor, distance in enumerate(neighbourhoods[node])} for node in range(len(neighbourhoods))}
+    
+    # Add artificial starting node
+    start_node = len(neighbourhoods)
+    graph[start_node] = {node: distance for node, distance in enumerate(neighbourhoods[0])}
+    
+    # Run Dijkstra's algorithm
+    distances = dijkstra(graph, start_node)
+    
+    # Complete the tour by returning to the starting node
+    tour = list(distances.keys()) + [start_node]
+
+    return tour
+-----------------------------------------------------
